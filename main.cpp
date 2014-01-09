@@ -10,7 +10,7 @@ LOCAL_C TBool running()
     while(find.Next(res) == KErrNone)
     {
         RProcess ph;
-        User::LeaveIfError( ph.Open(res) );
+        User::LeaveIfError(ph.Open(res));
         if(ph.SecureId() == 0x20029B6C)
             if (ph.ExitType() == EExitPending)
             {
@@ -22,7 +22,7 @@ LOCAL_C TBool running()
     while(find.Next(res) == KErrNone)
     {
         RProcess ph;
-        User::LeaveIfError( ph.Open(res) );
+        User::LeaveIfError(ph.Open(res));
         if(ph.SecureId() == 0x20001F65)
             if (ph.ExitType() == EExitPending)
             {
@@ -34,7 +34,7 @@ LOCAL_C TBool running()
     while(find.Next(res) == KErrNone)
     {
         RProcess ph;
-        User::LeaveIfError( ph.Open(res) );
+        User::LeaveIfError(ph.Open(res));
         if(ph.SecureId() == 0x20001F63)
             if (ph.ExitType() == EExitPending)
             {
@@ -46,7 +46,7 @@ LOCAL_C TBool running()
     while(find.Next(res) == KErrNone)
     {
         RProcess ph;
-        User::LeaveIfError( ph.Open(res) );
+        User::LeaveIfError(ph.Open(res));
         if(ph.SecureId() == 0x20016BD0)
             if (ph.ExitType() == EExitPending)
             {
@@ -58,7 +58,7 @@ LOCAL_C TBool running()
     while(find.Next(res) == KErrNone)
     {
         RProcess ph;
-        User::LeaveIfError( ph.Open(res) );
+        User::LeaveIfError(ph.Open(res));
         if(ph.SecureId() == 0x20029B69)
             if (ph.ExitType() == EExitPending)
             {
@@ -70,7 +70,7 @@ LOCAL_C TBool running()
     while(find.Next(res) == KErrNone)
     {
         RProcess ph;
-        User::LeaveIfError( ph.Open(res) );
+        User::LeaveIfError(ph.Open(res));
         if(ph.SecureId() == 0x2001a983)
             if (ph.ExitType() == EExitPending)
             {
@@ -79,6 +79,20 @@ LOCAL_C TBool running()
             }
         ph.Close();
     }
+
+    while(find.Next(res) == KErrNone)
+    {
+        RProcess ph;
+        User::LeaveIfError(ph.Open(res));
+        if(ph.SecureId() == 0x2001caf2)
+            if (ph.ExitType() == EExitPending)
+            {
+                return ETrue;
+                break;
+            }
+        ph.Close();
+    }
+
 
     return EFalse;
 }
@@ -89,7 +103,7 @@ LOCAL_C void ExeMainL()
     {
         CAknGlobalNote* note = CAknGlobalNote::NewLC();
         TRequestStatus iStatus;
-        note->ShowNoteL(iStatus, EAknGlobalErrorNote, _L("Error.\nThis app is designed to close Nokia Maps processes. They all aren't running on your device."));
+        note->ShowNoteL(iStatus, EAknGlobalInformationNote, _L("No applicable processes found."));
         User::WaitForRequest(iStatus);
         CleanupStack::PopAndDestroy(note);
     }
@@ -158,6 +172,14 @@ LOCAL_C void ExeMainL()
                 ph.Kill(KErrNone);
                 ph.Close();
             }
+
+            TFindProcess find7(_L("*[2001caf2]*"));//odnpserver
+            while(find6.Next(res) == KErrNone)
+            {
+                ph.Open(find7);
+                ph.Kill(KErrNone);
+                ph.Close();
+            }
             User::WaitForRequest(iStatus2);
             CleanupStack::PopAndDestroy(note);
         }
@@ -169,5 +191,4 @@ TInt E32Main()
     CTrapCleanup* cl=CTrapCleanup::New();
     TRAPD(error, ExeMainL());
     delete cl;
-    return 0;
 }
