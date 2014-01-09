@@ -1,101 +1,69 @@
 #include <AknGlobalNote.h>
 #include <aknglobalmsgquery.h>
 
+LOCAL_C TBool run(int a)
+{
+    TBool ret = EFalse;
+    TFullName res;
+    TFindProcess find;
+    while(find.Next(res) == KErrNone)
+    {
+        RProcess ph;
+        User::LeaveIfError(ph.Open(res));
+        if(ph.SecureId() == a)
+            if (ph.ExitType() == EExitPending)
+            {
+                ret = ETrue;
+                break;
+            }
+        ph.Close();
+    }
+    return ret;
+}
 
 LOCAL_C TBool running()
 {
-    TFullName res;
-    TFindProcess find;
-
-    while(find.Next(res) == KErrNone)
-    {
-        RProcess ph;
-        User::LeaveIfError(ph.Open(res));
-        if(ph.SecureId() == 0x20029B6C)
-            if (ph.ExitType() == EExitPending)
-            {
-                return ETrue;
-                break;
-            }
-        ph.Close();
-    }
-    while(find.Next(res) == KErrNone)
-    {
-        RProcess ph;
-        User::LeaveIfError(ph.Open(res));
-        if(ph.SecureId() == 0x20001F65)
-            if (ph.ExitType() == EExitPending)
-            {
-                return ETrue;
-                break;
-            }
-        ph.Close();
-    }
-    while(find.Next(res) == KErrNone)
-    {
-        RProcess ph;
-        User::LeaveIfError(ph.Open(res));
-        if(ph.SecureId() == 0x20001F63)
-            if (ph.ExitType() == EExitPending)
-            {
-                return ETrue;
-                break;
-            }
-        ph.Close();
-    }
-    while(find.Next(res) == KErrNone)
-    {
-        RProcess ph;
-        User::LeaveIfError(ph.Open(res));
-        if(ph.SecureId() == 0x20016BD0)
-            if (ph.ExitType() == EExitPending)
-            {
-                return ETrue;
-                break;
-            }
-        ph.Close();
-    }
-    while(find.Next(res) == KErrNone)
-    {
-        RProcess ph;
-        User::LeaveIfError(ph.Open(res));
-        if(ph.SecureId() == 0x20029B69)
-            if (ph.ExitType() == EExitPending)
-            {
-                return ETrue;
-                break;
-            }
-        ph.Close();
-    }
-    while(find.Next(res) == KErrNone)
-    {
-        RProcess ph;
-        User::LeaveIfError(ph.Open(res));
-        if(ph.SecureId() == 0x2001a983)
-            if (ph.ExitType() == EExitPending)
-            {
-                return ETrue;
-                break;
-            }
-        ph.Close();
-    }
-
-    while(find.Next(res) == KErrNone)
-    {
-        RProcess ph;
-        User::LeaveIfError(ph.Open(res));
-        if(ph.SecureId() == 0x2001caf2)
-            if (ph.ExitType() == EExitPending)
-            {
-                return ETrue;
-                break;
-            }
-        ph.Close();
-    }
-
+    if (run(0x20029B6C)) return ETrue;
+    if (run(0x20001F65)) return ETrue;
+    if (run(0x20001F63)) return ETrue;
+    if (run(0x20016BD0)) return ETrue;
+    if (run(0x20029B69)) return ETrue;
+    if (run(0x2001a983)) return ETrue;
+    if (run(0x2001caf2)) return ETrue;
 
     return EFalse;
 }
+
+LOCAL_C void kill(TInt aUid)
+{
+    TInt ret = KErrNone;
+
+    TFullName pName;
+    TFindProcess finder(_L("*"));
+
+    TUid tUid = {aUid};
+
+    while((ret = finder.Next(pName)) == KErrNone)
+    {
+        if (pName == KNullDesC)
+            break;
+
+        RProcess process;
+        ret = process.Open(pName);
+        if (ret != KErrNone)
+            return;
+
+        if (tUid == process.Type()[2])
+        {
+            process.Kill(0);
+            process.Close();
+            break;
+        }
+
+        process.Close();
+    }
+}
+
 
 LOCAL_C void ExeMainL()
 {    
@@ -128,58 +96,15 @@ LOCAL_C void ExeMainL()
             CAknGlobalNote* note = CAknGlobalNote::NewLC();
             TRequestStatus iStatus2;
             note->ShowNoteL(iStatus2, EAknGlobalConfirmationNote, _L("Success.\nClosed all Nokia Maps related processes."));
-            TFullName res;
-            RProcess ph;
-            TFindProcess find(_L("*[20029B6C]*"));//smart2go
-            while(find.Next(res) == KErrNone)
-            {
-                ph.Open(find);
-                ph.Kill(KErrNone);
-                ph.Close();
-            }
-            TFindProcess find2(_L("*[20001F65]*"));//sg2variantsrv
-            while(find2.Next(res) == KErrNone)
-            {
-                ph.Open(find2);
-                ph.Kill(KErrNone);
-                ph.Close();
-            }
-            TFindProcess find3(_L("*[20001F63]*"));//maps
-            while(find3.Next(res) == KErrNone)
-            {
-                ph.Open(find3);
-                ph.Kill(KErrNone);
-                ph.Close();
-            }
-            TFindProcess find4(_L("*[20016BD0]*"));//syncshare
-            while(find4.Next(res) == KErrNone)
-            {
-                ph.Open(find4);
-                ph.Kill(KErrNone);
-                ph.Close();
-            }
-            TFindProcess find5(_L("*[20029B69]*"));//drive
-            while(find5.Next(res) == KErrNone)
-            {
-                ph.Open(find5);
-                ph.Kill(KErrNone);
-                ph.Close();
-            }
-            TFindProcess find6(_L("*[2001a983]*"));//odnpserver
-            while(find6.Next(res) == KErrNone)
-            {
-                ph.Open(find6);
-                ph.Kill(KErrNone);
-                ph.Close();
-            }
 
-            TFindProcess find7(_L("*[2001caf2]*"));//odnpserver
-            while(find6.Next(res) == KErrNone)
-            {
-                ph.Open(find7);
-                ph.Kill(KErrNone);
-                ph.Close();
-            }
+            kill(537041772);//smart2go
+            kill(536878949);//sg2variantsrv
+            kill(536878947);//maps
+            kill(536964048);//syncshare
+            kill(537041769);//drive
+            kill(536979843);//odnpserver
+            kill(536988402);//odnpserver
+
             User::WaitForRequest(iStatus2);
             CleanupStack::PopAndDestroy(note);
         }

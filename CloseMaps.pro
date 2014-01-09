@@ -20,6 +20,6 @@ qtcAddDeployment()
 
 CONFIG -= qt
 
-INCLUDEPATH += C:\QtSDK\Symbian\SDKs\Symbian3Qt474\epoc32\include\mw\
-INCLUDEPATH += C:\QtSDK\Symbian\SDKs\Symbian3Qt474\epoc32\include\platform\
-INCLUDEPATH += C:\QtSDK\Symbian\SDKs\Symbian3Qt474\epoc32\include\platform\mw\
+INCLUDEPATH += C:/QtSDK/Symbian/SDKs/Symbian3Qt474/epoc32/include/mw/
+INCLUDEPATH += C:/QtSDK/Symbian/SDKs/Symbian3Qt474/epoc32/include/platform/
+INCLUDEPATH += C:/QtSDK/Symbian/SDKs/Symbian3Qt474/epoc32/include/platform/mw/
