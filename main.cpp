@@ -1,7 +1,7 @@
 #include <AknGlobalNote.h>
 #include <aknglobalmsgquery.h>
 
-LOCAL_C TBool run(int a)
+LOCAL_C TBool run(const int &a)
 {
     TBool ret = EFalse;
     TFullName res;
@@ -34,7 +34,7 @@ LOCAL_C TBool running()
     return EFalse;
 }
 
-LOCAL_C void kill(TInt aUid)
+LOCAL_C void kill(const TInt &aUid)
 {
     TInt ret = KErrNone;
 
@@ -66,7 +66,7 @@ LOCAL_C void kill(TInt aUid)
 
 
 LOCAL_C void ExeMainL()
-{    
+{
     if (!running())
     {
         CAknGlobalNote* note = CAknGlobalNote::NewLC();
@@ -81,7 +81,7 @@ LOCAL_C void ExeMainL()
         CleanupStack::PushL(pDlg);
         TRequestStatus iStatus;
         pDlg->ShowMsgQueryL(iStatus,
-                            _L("Do you want to close all processes which are related to Nokia Maps?\nThis will unlock compass for 3rd party apps and give you more free RAM & CPU time."),
+                            _L("Do you want to close all processes which are related to Nokia Maps/GPS/compass?\n\nThis will unlock compass for 3rd party apps and give you more free RAM & CPU time."),
                             R_AVKON_SOFTKEYS_YES_NO,
                             _L("CloseMaps"),
                             KNullDesC,
